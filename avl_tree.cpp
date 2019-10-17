@@ -1,33 +1,34 @@
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
-struct avl {
-   int d;
-   struct avl *left;
-   struct avl *right;
+struct node {
+   int data;
+   struct node *left;
+   struct node *right;
 }*r;
 
 class avl_tree {
    public:
-      int height(avl*);
-      int difference(avl*);
-      avl *right_right_rotate(avl*);
-      avl *left_left_rotate(avl*);
-      avl *left_right_rotate(avl*);
-      avl *right_left_rotate(avl*);
-      avl *balance(avl*);
-      avl *insert(avl*, int);
-      void show(avl*, int);
-      void inorder(avl*);
-      void preorder(avl*);
-      void postorder(avl*);
+      int height(node*);
+      int difference(node*);
+      node *right_right_rotate(node*);
+      node *left_left_rotate(node*);
+      node *left_right_rotate(node*);
+      node *right_left_rotate(node*);
+      node *balance(node*);
+      node *insert(node*, int);
+      void show(node*, int);
+      void inorder(node*);
+      void preorder(node*);
+      void postorder(node*);
       avl_tree() {
          r = NULL;
       }
 };
 
-int avl_tree::height(avl *t) {
+int avl_tree::height(node *t) {
    int h = 0;
    if (t != NULL) {
       int l_height = height(t->left);
@@ -38,15 +39,15 @@ int avl_tree::height(avl *t) {
    return h;
 }
 
-int avl_tree::difference(avl *t) {
+int avl_tree::difference(node *t) {
    int l_height = height(t->left);
    int r_height = height(t->right);
    int b_factor = l_height - r_height;
    return b_factor;
 }
 
-avl *avl_tree::right_right_rotate(avl *parent) {
-   avl *t;
+node *avl_tree::right_right_rotate(node *parent) {
+   node *t;
    t = parent->right;
    parent->right = t->left;
    t->left = parent;
@@ -54,8 +55,8 @@ avl *avl_tree::right_right_rotate(avl *parent) {
    return t;
 }
 
-avl *avl_tree::left_left_rotate(avl *parent) {
-   avl *t;
+node *avl_tree::left_left_rotate(node *parent) {
+   node *t;
    t = parent->left;
    parent->left = t->right;
    t->right = parent;
@@ -63,23 +64,23 @@ avl *avl_tree::left_left_rotate(avl *parent) {
    return t;
 }
 
-avl *avl_tree::left_right_rotate(avl *parent) {
-   avl *t;
+node *avl_tree::left_right_rotate(node *parent) {
+   node *t;
    t = parent->left;
    parent->left = right_right_rotate(t);
    cout<<"Left-Right rotation";
    return left_left_rotate(parent);
 }
 
-avl *avl_tree::right_left_rotate(avl *parent) {
-   avl *t;
+node *avl_tree::right_left_rotate(node *parent) {
+   node *t;
    t = parent->right;
    parent->right = left_left_rotate(t);
    cout<<"Right-Left rotation";
    return right_right_rotate(parent);
 }
 
-avl *avl_tree::balance(avl *t) {
+node *avl_tree::balance(node *t) {
    int bal_factor = difference(t);
    if (bal_factor > 1) {
       if (difference(t->left) > 0)
@@ -95,23 +96,23 @@ avl *avl_tree::balance(avl *t) {
    return t;
 }
 
-avl *avl_tree::insert(avl *r, int v) {
+node *avl_tree::insert(node *r, int v) {
    if (r == NULL) {
-      r = new avl;
-      r->d = v;
+      r = new node;
+      r->data = v;
       r->left = NULL;
       r->right = NULL;
       return r;
-   } else if (v< r->d) {
+   } else if (v< r->data) {
       r->left = insert(r->left, v);
       r = balance(r);
-   } else if (v >= r->d) {
+   } else if (v >= r->data) {
       r->right = insert(r->right, v);
       r = balance(r);
    } return r;
 }
 
-void avl_tree::show(avl *p, int l) {
+void avl_tree::show(node *p, int l) {
    int i;
    if (p != NULL) {
       show(p->right, l+ 1);
@@ -120,33 +121,33 @@ void avl_tree::show(avl *p, int l) {
          cout << "Root -> ";
       for (i = 0; i < l&& p != r; i++)
          cout << " ";
-         cout << p->d;
+         cout << p->data;
          show(p->left, l + 1);
    }
 }
 
-void avl_tree::inorder(avl *t) {
+void avl_tree::inorder(node *t) {
    if (t == NULL)
       return;
       inorder(t->left);
-      cout << t->d << " ";
+      cout << t->data << " ";
       inorder(t->right);
 }
 
-void avl_tree::preorder(avl *t) {
+void avl_tree::preorder(node *t) {
    if (t == NULL)
       return;
-      cout << t->d << " ";
+      cout << t->data << " ";
       preorder(t->left);
       preorder(t->right);
 }
 
-void avl_tree::postorder(avl *t) {
+void avl_tree::postorder(node *t) {
    if (t == NULL)
       return;
       postorder(t->left);
       postorder(t->right);
-      cout << t->d << " ";
+      cout << t->data << " ";
 }
 
 int main() {
